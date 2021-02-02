@@ -14,7 +14,6 @@ LISTWORDS = list(csv.reader(FILE))
 
 class wordchooser:
     def __init__(self):
-        print(LISTWORDS)
         self.NUM = random.randint(0,len(LISTWORDS[0]))
         self.WORD = LISTWORDS[0][self.NUM]
         self.COUNT = 0
@@ -48,10 +47,11 @@ class wordchooser:
             print(HANGMAN6)
         elif count==6:
             print(HANGMAN7)
+            print(self.WORD)
             print("YOU DIED!")
 
             self.retry()
-        print(self.WORD)
+
 
     def input(self):
         self.CHOOSED = []

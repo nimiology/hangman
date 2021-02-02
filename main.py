@@ -1,7 +1,6 @@
-import random
-import time
-import csv
-import sys, time
+import csv, sys, time, random
+from os import system, name
+
 HANGMAN1 = '-------\n|     |\n|     |\n|\n|\n|\n|\n|\n__________'
 HANGMAN2 = '-------\n|     |\n|     |\n|     0\n|\n|\n|\n|\n|\n__________'
 HANGMAN3 = '-------\n|     |\n|     |\n|     0\n|     |\n|\n|\n|\n|\n__________'
@@ -11,38 +10,94 @@ HANGMAN6 = '-------\n|     |\n|     |\n|     0\n|    /|\\\n|    /\n|\n|\n_______
 HANGMAN7 = '-------\n|     |\n|     |\n|     0\n|    /|\\\n|    / \\\n|\n|\n__________'
 
 FILE = open("WORDS.csv","r")
+
 class wordchooser:
     def __init__(self,FILE):
-        self.LISTWORDS = list(csv.reader(FILE))
-        self.NUM = random.randint(0,len(self.LISTWORDS[0]))
-        self.WORD = self.LISTWORDS[0][self.NUM]
-        self.count = 0
+        LISTWORDS = list(csv.reader(FILE))
+        self.NUM = random.randint(0,len(LISTWORDS[0]))
+        self.WORD = LISTWORDS[0][self.NUM]
+        self.COUNT = 0
+        self.POSITION = 0
+        self.HIDED = len(self.WORD) * '_ '
+        self.CHOOSED = []
+        self.ALPHBAS = "    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P\n            Q, R, S, T, U, V, W, X, Y, Z"
 
-    def hangman(self,count):
+    def clear(self):
+        # for windows
+        if name == 'nt':
+            _ = system('cls')
+        # for mac and linux(here, os.name is 'posix')
+        else:
+            _ = system('clear')
+
+    def hangman(self):
+        self.clear()
+        print()
+        count = self.COUNT
         if count==0:
             print(HANGMAN1)
-        if count==1:
+        elif count==1:
             print(HANGMAN2)
-        if count==2:
+        elif count==2:
             print(HANGMAN3)
-        if count==3:
+        elif count==3:
             print(HANGMAN4)
-        if count==4:
+        elif count==4:
             print(HANGMAN5)
-        if count==5:
+        elif count==5:
             print(HANGMAN6)
-        if count==6:
-            print(HANGMAN7)
+        #elif count==6:
+         #   print(HANGMAN7)
+          #  print(self.WORD)
+           # print("LOOSER")
 
-    def shower(self):
-        HIDED = len(self.WORD)*'_ '
-        alphbas = ['A','B','C','D','E','F','G','H','I','J','K'
-                     ,'L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
-        for alphba in alphbas:
-            print(alphba)
+            #def msg(txt):
+             #   sys.stdout.write(txt)
+              #  sys.stdout.flush()
+
+            #for sec in range(10):
+             #   time.sleep(1)
+             #   m = "starting %2d seconds" % (10 - sec)
+              #  msg(m + chr(13))
+            #letsdoit()
+        print(self.WORD)
+
+    def input(self):
+        DELETER = input()
+        DELETER2 = DELETER.upper()
+        if len(DELETER)<2:
+            if self.WORD.find(DELETER)>-1:
+                ALPHBAS = self.ALPHBAS.replace(DELETER2," ")
+                print(ALPHBAS)
+                try:
+                    while(self.POSITION<= len(self.WORD)):
+                        self.POSITION = str.index(DELETER,self.POSITION)
+                        if(self.POSITION):
+                            self.CHOOSED.append(self.POSITION)
+                        self.POSITION+=1
+                    for letterreplace in self.CHOOSED:
+                        self.HIDED=self.HIDED.replace(self.HIDED[letterreplace],DELETER)
+                except:
+                    pass
+
+            else:
+                self.COUNT +=1
+        else:
+            print("Just one word each time")
 
 
+    def show(self):
+        self.hangman()
+        print(self.ALPHBAS)
+        print(self.HIDED)
+        self.input()
 
-ob = wordchooser(FILE)
-ob.shower()
+    def start(self):
+        while True:
+            self.show()
+
+def letsdoit():
+    ob = wordchooser(FILE)
+    ob.start()
+letsdoit()
 

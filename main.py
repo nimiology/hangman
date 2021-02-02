@@ -17,9 +17,7 @@ class wordchooser:
         self.NUM = random.randint(0,len(LISTWORDS[0]))
         self.WORD = LISTWORDS[0][self.NUM]
         self.COUNT = 0
-        self.POSITION = 0
-        self.HIDED = len(self.WORD) * '_ '
-        self.CHOOSED = []
+        self.HIDED = list(len(self.WORD) * '_')
         self.ALPHBAS = "    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P\n            Q, R, S, T, U, V, W, X, Y, Z"
 
     def clear(self):
@@ -63,22 +61,24 @@ class wordchooser:
         print(self.WORD)
 
     def input(self):
+        self.CHOOSED = []
+        self.POSITION = 0
         DELETER = input()
         DELETER2 = DELETER.upper()
         if len(DELETER)<2:
-            if self.WORD.find(DELETER)>-1:
+            if self.WORD.find(DELETER)>-1 or self.WORD.find(DELETER2)>-1:
                 ALPHBAS = self.ALPHBAS.replace(DELETER2," ")
                 print(ALPHBAS)
                 try:
                     while(self.POSITION<= len(self.WORD)):
-                        self.POSITION = str.index(DELETER,self.POSITION)
-                        if(self.POSITION):
-                            self.CHOOSED.append(self.POSITION)
+                        self.POSITION = self.WORD.index(DELETER,self.POSITION)
+                        self.CHOOSED.append(self.POSITION)
                         self.POSITION+=1
-                    for letterreplace in self.CHOOSED:
-                        self.HIDED=self.HIDED.replace(self.HIDED[letterreplace],DELETER)
                 except:
                     pass
+                for letterreplace in self.CHOOSED:
+                    self.HIDED[letterreplace] = DELETER
+
 
             else:
                 self.COUNT +=1
@@ -89,7 +89,8 @@ class wordchooser:
     def show(self):
         self.hangman()
         print(self.ALPHBAS)
-        print(self.HIDED)
+
+        print("".join(self.HIDED))
         self.input()
 
     def start(self):

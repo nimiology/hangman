@@ -10,14 +10,16 @@ HANGMAN6 = '-------\n|     |\n|     |\n|     0\n|    /|\\\n|    /\n|\n|\n_______
 HANGMAN7 = '-------\n|     |\n|     |\n|     0\n|    /|\\\n|    / \\\n|\n|\n__________'
 
 FILE = open("WORDS.csv","r")
+LISTWORDS = list(csv.reader(FILE))
 
 class wordchooser:
-    def __init__(self,FILE):
-        LISTWORDS = list(csv.reader(FILE))
+    def __init__(self):
+        print(LISTWORDS)
         self.NUM = random.randint(0,len(LISTWORDS[0]))
         self.WORD = LISTWORDS[0][self.NUM]
         self.COUNT = 0
-        self.HIDED = list(len(self.WORD) * '_')
+        self.HIDE = len(self.WORD) * '_ ,'
+        self.HIDED = self.HIDE.split(",")
         self.ALPHBAS = "    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P\n            Q, R, S, T, U, V, W, X, Y, Z"
 
     def clear(self):
@@ -44,20 +46,11 @@ class wordchooser:
             print(HANGMAN5)
         elif count==5:
             print(HANGMAN6)
-        #elif count==6:
-         #   print(HANGMAN7)
-          #  print(self.WORD)
-           # print("LOOSER")
+        elif count==6:
+            print(HANGMAN7)
+            print("YOU DIED!")
 
-            #def msg(txt):
-             #   sys.stdout.write(txt)
-              #  sys.stdout.flush()
-
-            #for sec in range(10):
-             #   time.sleep(1)
-             #   m = "starting %2d seconds" % (10 - sec)
-              #  msg(m + chr(13))
-            #letsdoit()
+            self.retry()
         print(self.WORD)
 
     def input(self):
@@ -65,10 +58,9 @@ class wordchooser:
         self.POSITION = 0
         DELETER = input()
         DELETER2 = DELETER.upper()
+        self.ALPHBAS = self.ALPHBAS.replace(DELETER2, " ")
         if len(DELETER)<2:
             if self.WORD.find(DELETER)>-1 or self.WORD.find(DELETER2)>-1:
-                ALPHBAS = self.ALPHBAS.replace(DELETER2," ")
-                print(ALPHBAS)
                 try:
                     while(self.POSITION<= len(self.WORD)):
                         self.POSITION = self.WORD.index(DELETER,self.POSITION)
@@ -78,27 +70,45 @@ class wordchooser:
                     pass
                 for letterreplace in self.CHOOSED:
                     self.HIDED[letterreplace] = DELETER
-
-
             else:
                 self.COUNT +=1
         else:
-            print("Just one word each time")
-
+            try:
+                SHITISM = input("Just one word each time(Press enter to Continue)")
+                pass
+            except:
+                pass
 
     def show(self):
         self.hangman()
         print(self.ALPHBAS)
-
         print("".join(self.HIDED))
         self.input()
 
+    def retry(self):
+        CONTINUE = int(input("If you want to try again enter 1 ,if you not enter0\n"))
+        if CONTINUE == 0:
+            exit()
+        elif CONTINUE == 1:
+            letsdoit()
+
     def start(self):
+        def listtostr(HIDED):
+            str = ""
+            for meow in HIDED:
+                str+=meow
+            return str
         while True:
-            self.show()
+            if self.WORD==listtostr(self.HIDED):
+                print('NICE')
+                break
+            else:
+                self.show()
+        self.retry()
+
 
 def letsdoit():
-    ob = wordchooser(FILE)
+    ob = wordchooser()
     ob.start()
 letsdoit()
 
